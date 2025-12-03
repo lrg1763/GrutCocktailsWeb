@@ -47,16 +47,42 @@
             <div class="counter" id="counter">
                 <span id="currentNumber">1</span>/<span id="totalNumber">22</span>
             </div>
-            <button class="download-btn" id="downloadBtn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                СКАЧАТЬ
-            </button>
+            <div class="action-buttons">
+                <button class="action-btn composition-btn" id="compositionBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" 
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    СОСТАВ
+                </button>
+                <button class="action-btn download-btn" id="downloadBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    СКАЧАТЬ
+                </button>
+            </div>
         </div>
     </main>
+    
+    <!-- Модальное окно для состава -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h2 class="modal-title" id="modalTitle">АПЕРОЛЬ ШПРИНЦ</h2>
+            <div class="modal-body">
+                <div class="composition-content" id="compositionContent">
+                    <!-- Состав будет загружаться через JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script src="script.js"></script>
 </body>

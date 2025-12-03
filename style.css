@@ -86,7 +86,7 @@ body {
     max-width: 320px;
     background: transparent;
     flex-shrink: 0;
-    position: relative; /* Добавляем для позиционирования стрелок */
+    position: relative;
 }
 
 .cocktail-image {
@@ -131,7 +131,7 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     flex-shrink: 0;
-    transform: translateY(-50%); /* Центрируем по вертикали */
+    transform: translateY(-50%);
 }
 
 .nav-btn:hover {
@@ -146,12 +146,12 @@ body {
 /* СТРЕЛКИ ПО ЦЕНТРУ КРАЯ ФОТО */
 .prev-btn {
     left: 0;
-    transform: translate(-50%, -50%); /* Центрируем по краю фото */
+    transform: translate(-50%, -50%);
 }
 
 .next-btn {
     right: 0;
-    transform: translate(50%, -50%); /* Центрируем по краю фото */
+    transform: translate(50%, -50%);
 }
 
 /* Эффекты при наведении с учетом нового позиционирования */
@@ -184,6 +184,7 @@ body {
     gap: 15px;
     flex-shrink: 0;
     margin-top: 10px;
+    width: 100%;
 }
 
 .counter {
@@ -198,11 +199,18 @@ body {
     text-transform: uppercase;
 }
 
-.download-btn {
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+.action-btn {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 12px 20px;
     border-radius: 25px;
     cursor: pointer;
     font-family: 'Martian Mono', monospace;
@@ -213,20 +221,138 @@ body {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     text-transform: uppercase;
+    flex: 1;
+    max-width: 200px;
+    justify-content: center;
 }
 
-.download-btn:hover {
+.action-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
-.download-btn:active {
+.action-btn:active {
     transform: translateY(0);
 }
 
-.download-btn svg {
+.action-btn svg {
     width: 18px;
     height: 18px;
+}
+
+.download-btn {
+    /* Стили уже определены в .action-btn */
+}
+
+.composition-btn {
+    /* Стили уже определены в .action-btn */
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 30px;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-close:active {
+    transform: scale(0.95);
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-family: 'Martian Mono', monospace;
+    margin-bottom: 20px;
+    text-align: center;
+    padding-right: 40px;
+}
+
+.modal-body {
+    font-family: 'Martian Mono', monospace;
+    color: #ffffff;
+}
+
+.composition-content {
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.composition-content p {
+    margin-bottom: 15px;
+}
+
+.composition-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.composition-content li {
+    margin-bottom: 10px;
+    padding-left: 0;
+    position: relative;
 }
 
 /* ===== ПЛАНШЕТЫ (768px+) ===== */
@@ -280,13 +406,25 @@ body {
         font-size: 18px;
     }
     
-    .download-btn {
+    .action-btn {
         font-size: 17px;
         padding: 14px 24px;
     }
     
-    .bottom-controls {
-        margin-top: 15px;
+    .action-buttons {
+        gap: 15px;
+    }
+    
+    .modal-content {
+        padding: 40px;
+    }
+    
+    .modal-title {
+        font-size: 24px;
+    }
+    
+    .composition-content {
+        font-size: 17px;
     }
 }
 
@@ -341,10 +479,26 @@ body {
         height: 24px;
     }
     
-    .bottom-controls {
+    .action-buttons {
         flex-direction: row;
         gap: 20px;
-        margin-top: 20px;
+    }
+    
+    .action-btn {
+        max-width: 220px;
+    }
+    
+    .modal-content {
+        max-width: 500px;
+        padding: 50px;
+    }
+    
+    .modal-title {
+        font-size: 26px;
+    }
+    
+    .composition-content {
+        font-size: 18px;
     }
 }
 
@@ -371,6 +525,16 @@ body {
     .nav-btn svg {
         width: 24px;
         height: 24px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-btn {
+        width: 100%;
+        max-width: 280px;
     }
 }
 
@@ -408,13 +572,22 @@ body {
         height: 22px;
     }
     
-    .download-btn {
+    .action-btn {
         font-size: 14px;
-        padding: 10px 20px;
+        padding: 10px 16px;
     }
     
-    .bottom-controls {
-        margin-top: 5px;
+    .modal-content {
+        padding: 25px 20px;
+    }
+    
+    .modal-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .composition-content {
+        font-size: 14px;
     }
 }
 
@@ -462,9 +635,13 @@ body {
         height: 350px;
     }
     
-    .bottom-controls {
-        margin-top: 5px;
+    .action-buttons {
         gap: 10px;
+    }
+    
+    .modal-content {
+        max-height: 70vh;
+        padding: 25px;
     }
 }
 
@@ -498,12 +675,22 @@ body {
         padding: 6px 12px;
     }
     
-    .download-btn {
+    .action-btn {
         font-size: 13px;
-        padding: 8px 16px;
+        padding: 8px 14px;
     }
     
-    .bottom-controls {
-        margin-top: 3px;
+    .modal-content {
+        max-height: 65vh;
+        padding: 20px;
+    }
+    
+    .modal-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .composition-content {
+        font-size: 13px;
     }
 }
