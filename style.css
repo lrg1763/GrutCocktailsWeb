@@ -86,6 +86,7 @@ body {
     max-width: 320px;
     background: transparent;
     flex-shrink: 0;
+    position: relative; /* Добавляем для позиционирования стрелок */
 }
 
 .cocktail-image {
@@ -115,7 +116,6 @@ body {
 .nav-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.1);
     border: none;
     color: #ffffff;
@@ -131,6 +131,7 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     flex-shrink: 0;
+    transform: translateY(-50%); /* Центрируем по вертикали */
 }
 
 .nav-btn:hover {
@@ -142,12 +143,32 @@ body {
     transform: translateY(-50%) scale(0.95);
 }
 
+/* СТРЕЛКИ ПО ЦЕНТРУ КРАЯ ФОТО */
 .prev-btn {
-    left: 10px;
+    left: 0;
+    transform: translate(-50%, -50%); /* Центрируем по краю фото */
 }
 
 .next-btn {
-    right: 10px;
+    right: 0;
+    transform: translate(50%, -50%); /* Центрируем по краю фото */
+}
+
+/* Эффекты при наведении с учетом нового позиционирования */
+.prev-btn:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.prev-btn:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.next-btn:hover {
+    transform: translate(50%, -50%) scale(1.1);
+}
+
+.next-btn:active {
+    transform: translate(50%, -50%) scale(0.95);
 }
 
 .nav-btn svg {
@@ -250,14 +271,6 @@ body {
         height: 50px;
     }
     
-    .prev-btn {
-        left: 15px;
-    }
-    
-    .next-btn {
-        right: 15px;
-    }
-    
     .nav-btn svg {
         width: 22px;
         height: 22px;
@@ -277,7 +290,7 @@ body {
     }
 }
 
-/* ===== ДЕСКТОПЫ (1024px+) - СТРЕЛКИ ОЧЕНЬ БЛИЗКО ===== */
+/* ===== ДЕСКТОПЫ (1024px+) ===== */
 @media (min-width: 1024px) {
     .main {
         max-width: 600px;
@@ -321,14 +334,6 @@ body {
     .nav-btn {
         width: 60px;
         height: 60px;
-    }
-    
-    .prev-btn {
-        left: -5px; /* ОЧЕНЬ БЛИЗКО К ФОТО! Практически касается */
-    }
-    
-    .next-btn {
-        right: -5px; /* ОЧЕНЬ БЛИЗКО К ФОТО! Практически касается */
     }
     
     .nav-btn svg {
@@ -401,14 +406,6 @@ body {
     .nav-btn svg {
         width: 22px;
         height: 22px;
-    }
-    
-    .prev-btn {
-        left: 5px;
-    }
-    
-    .next-btn {
-        right: 5px;
     }
     
     .download-btn {
