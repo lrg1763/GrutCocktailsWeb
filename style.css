@@ -280,7 +280,7 @@ body {
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
-    padding: 30px;
+    padding: 40px 30px 30px;
     transform: translateY(20px);
     transition: transform 0.3s ease;
 }
@@ -305,6 +305,7 @@ body {
     justify-content: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    z-index: 2;
 }
 
 .modal-close:hover {
@@ -316,6 +317,7 @@ body {
     transform: scale(0.95);
 }
 
+/* ===== ОТЦЕНТРИРОВАННЫЙ ЗАГОЛОВОК МОДАЛЬНОГО ОКНА ===== */
 .modal-title {
     font-size: 22px;
     font-weight: 400;
@@ -323,9 +325,15 @@ body {
     text-transform: uppercase;
     color: #ffffff;
     font-family: 'Martian Mono', monospace;
-    margin-bottom: 20px;
+    margin: 0 auto 25px;
     text-align: center;
-    padding-right: 40px;
+    width: 100%;
+    display: block;
+    line-height: 1.3;
+    padding: 0 40px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 .modal-body {
@@ -416,11 +424,13 @@ body {
     }
     
     .modal-content {
-        padding: 40px;
+        padding: 40px 35px 35px;
     }
     
     .modal-title {
         font-size: 24px;
+        margin-bottom: 30px;
+        padding: 0 50px;
     }
     
     .composition-content {
@@ -490,11 +500,13 @@ body {
     
     .modal-content {
         max-width: 500px;
-        padding: 50px;
+        padding: 50px 40px 40px;
     }
     
     .modal-title {
         font-size: 26px;
+        margin-bottom: 35px;
+        padding: 0 60px;
     }
     
     .composition-content {
@@ -578,12 +590,13 @@ body {
     }
     
     .modal-content {
-        padding: 25px 20px;
+        padding: 35px 20px 25px;
     }
     
     .modal-title {
         font-size: 20px;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
+        padding: 0 35px;
     }
     
     .composition-content {
@@ -641,7 +654,17 @@ body {
     
     .modal-content {
         max-height: 70vh;
-        padding: 25px;
+        padding: 35px 25px 25px;
+    }
+    
+    .modal-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+        padding: 0 40px;
+    }
+    
+    .composition-content {
+        font-size: 16px;
     }
 }
 
@@ -682,12 +705,13 @@ body {
     
     .modal-content {
         max-height: 65vh;
-        padding: 20px;
+        padding: 30px 20px 20px;
     }
     
     .modal-title {
         font-size: 18px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
+        padding: 0 35px;
     }
     
     .composition-content {
