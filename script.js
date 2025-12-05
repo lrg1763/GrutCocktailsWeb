@@ -136,6 +136,7 @@ const cocktails = [
 
 let currentCocktailIndex = 0;
 let imagesPreloaded = false;
+let isAnimating = false; // Флаг для предотвращения одновременных анимаций
 
 // Элементы модального окна
 const modalOverlay = document.getElementById('modalOverlay');
@@ -198,13 +199,8 @@ function preloadImages() {
     });
 }
 
-// Функция для обновления отображения
-function updateDisplay() {
-    // Обновляем счетчик
-    document.getElementById('currentNumber').textContent = currentCocktailIndex + 1;
-    document.getElementById('totalNumber').textContent = cocktails.length;
-    
-    // Обновляем изображение
+// Вспомогательная функция для обновления содержимого изображения
+function updateImageContent() {
     const cocktailImage = document.getElementById('cocktailImage');
     const currentCocktail = cocktails[currentCocktailIndex];
     
@@ -241,9 +237,67 @@ function updateDisplay() {
         
         cocktailImage.appendChild(img);
     }
+}
+
+// Функция для обновления отображения с анимацией
+function updateDisplay(direction = null) {
+    // Если анимация уже выполняется, игнорируем запрос
+    if (isAnimating && direction !== null) {
+        return;
+    }
     
-    // Предзагружаем следующее и предыдущее изображения для плавного перехода
-    preloadAdjacentImages();
+    // Обновляем счетчик
+    const currentNumber = document.getElementById('currentNumber');
+    const totalNumber = document.getElementById('totalNumber');
+    
+    currentNumber.textContent = currentCocktailIndex + 1;
+    totalNumber.textContent = cocktails.length;
+    
+    // Получаем элементы для анимации
+    const cocktailImage = document.getElementById('cocktailImage');
+    const cocktailCard = document.getElementById('cocktailCard');
+    
+    // Удаляем все предыдущие классы анимации
+    cocktailCard.classList.remove('slide-next-enter', 'slide-next-exit', 
+                                 'slide-prev-enter', 'slide-prev-exit', 'fade-in');
+    
+    // Если это первая загрузка или направление не указано - используем fade анимацию
+    if (!direction) {
+        cocktailCard.classList.add('fade-in');
+        updateImageContent();
+        preloadAdjacentImages();
+        return;
+    }
+    
+    // Если переходим вперед или назад
+    if (direction === 'next' || direction === 'prev') {
+        isAnimating = true;
+        
+        // Добавляем класс для анимации выхода
+        const exitClass = direction === 'next' ? 'slide-next-exit' : 'slide-prev-exit';
+        const enterClass = direction === 'next' ? 'slide-next-enter' : 'slide-prev-enter';
+        
+        cocktailCard.classList.add(exitClass);
+        
+        // Задержка для анимации выхода перед сменой изображения
+        setTimeout(() => {
+            // Обновляем изображение
+            updateImageContent();
+            
+            // Убираем класс выхода и добавляем класс входа
+            cocktailCard.classList.remove(exitClass);
+            cocktailCard.classList.add(enterClass);
+            
+            // Предзагружаем соседние изображения
+            preloadAdjacentImages();
+            
+            // Убираем класс анимации после завершения
+            setTimeout(() => {
+                cocktailCard.classList.remove(enterClass);
+                isAnimating = false;
+            }, 400);
+        }, 50);
+    }
 }
 
 // Функция для предзагрузки соседних изображений
@@ -307,14 +361,34 @@ function downloadCurrentPhoto() {
 
 // Функция для перехода к следующему коктейлю
 function nextCocktail() {
+    // Если анимация уже выполняется, не делаем ничего
+    if (isAnimating) return;
+    
     currentCocktailIndex = (currentCocktailIndex + 1) % cocktails.length;
-    updateDisplay();
+    updateDisplay('next');
+    
+    // Анимация для кнопки следующего коктейля
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.style.transform = 'translate(50%, -50%) scale(0.9)';
+    setTimeout(() => {
+        nextBtn.style.transform = 'translate(50%, -50%) scale(1)';
+    }, 150);
 }
 
 // Функция для перехода к предыдущему коктейлю
 function prevCocktail() {
+    // Если анимация уже выполняется, не делаем ничего
+    if (isAnimating) return;
+    
     currentCocktailIndex = (currentCocktailIndex - 1 + cocktails.length) % cocktails.length;
-    updateDisplay();
+    updateDisplay('prev');
+    
+    // Анимация для кнопки предыдущего коктейля
+    const prevBtn = document.getElementById('prevBtn');
+    prevBtn.style.transform = 'translate(-50%, -50%) scale(0.9)';
+    setTimeout(() => {
+        prevBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+    }, 150);
 }
 
 // Функция для обработки клавиатуры
@@ -330,8 +404,8 @@ function handleKeyboard(e) {
 
 // Инициализация при загрузке страницы
 function init() {
-    // Сначала показываем первый коктейль без предзагрузки
-    updateDisplay();
+    // Сначала показываем первый коктейль с fade анимацией
+    updateDisplay(); // без направления - fade анимация
     
     // Начинаем предзагрузку изображений в фоне
     preloadImages();
@@ -356,24 +430,49 @@ function init() {
     // Добавляем обработчик для свайпов на мобильных устройствах
     let touchStartX = 0;
     let touchEndX = 0;
+    let touchStartTime = 0;
+    let isSwiping = false;
     
     document.addEventListener('touchstart', e => {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartTime = Date.now();
+        isSwiping = true;
+    });
+    
+    document.addEventListener('touchmove', e => {
+        if (!isSwiping) return;
+        
+        const touchCurrentX = e.changedTouches[0].screenX;
+        const diffX = touchCurrentX - touchStartX;
+        
+        // Можно добавить визуальную обратную связь при свайпе
+        if (Math.abs(diffX) > 10) {
+            e.preventDefault(); // Предотвращаем скролл страницы при горизонтальном свайпе
+        }
     });
     
     document.addEventListener('touchend', e => {
+        if (!isSwiping) return;
+        
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-    
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        if (touchEndX < touchStartX - swipeThreshold) {
+        const touchEndTime = Date.now();
+        const diffX = touchEndX - touchStartX;
+        const diffTime = touchEndTime - touchStartTime;
+        
+        // Определяем был ли это быстрый свайп
+        const isFastSwipe = diffTime < 300;
+        const swipeThreshold = isFastSwipe ? 30 : 50;
+        
+        if (diffX < -swipeThreshold) {
+            // Свайп влево - следующий коктейль
             nextCocktail();
-        } else if (touchEndX > touchStartX + swipeThreshold) {
+        } else if (diffX > swipeThreshold) {
+            // Свайп вправо - предыдущий коктейль
             prevCocktail();
         }
-    }
+        
+        isSwiping = false;
+    });
 }
 
 // Запускаем инициализацию при загрузке DOM

@@ -87,6 +87,7 @@ body {
     background: transparent;
     flex-shrink: 0;
     position: relative;
+    animation: fadeIn 0.3s ease;
 }
 
 .cocktail-image {
@@ -132,6 +133,8 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     flex-shrink: 0;
     transform: translateY(-50%);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
 .nav-btn:hover {
@@ -141,6 +144,11 @@ body {
 
 .nav-btn:active {
     transform: translateY(-50%) scale(0.95);
+}
+
+.nav-btn:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 /* СТРЕЛКИ ПО ЦЕНТРУ КРАЯ ФОТО */
@@ -224,6 +232,8 @@ body {
     flex: 1;
     max-width: 200px;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
 .action-btn:hover {
@@ -233,6 +243,11 @@ body {
 
 .action-btn:active {
     transform: translateY(0);
+}
+
+.action-btn:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .action-btn svg {
@@ -306,6 +321,8 @@ body {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
 .modal-close:hover {
@@ -315,6 +332,11 @@ body {
 
 .modal-close:active {
     transform: scale(0.95);
+}
+
+.modal-close:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 /* ===== ОТЦЕНТРИРОВАННЫЙ ЗАГОЛОВОК МОДАЛЬНОГО ОКНА ===== */
@@ -361,6 +383,117 @@ body {
     margin-bottom: 10px;
     padding-left: 0;
     position: relative;
+}
+
+/* ===== АНИМАЦИИ ДЛЯ СМЕНЫ ФОТО ===== */
+
+/* Анимация появления фото */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Анимация для смены фото вперед (следующий коктейль) */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Анимация для смены фото назад (предыдущий коктейль) */
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Анимация выхода фото вперед */
+@keyframes slideOutToLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.95);
+    }
+}
+
+/* Анимация выхода фото назад */
+@keyframes slideOutToRight {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+}
+
+/* Классы для анимаций */
+.cocktail-card.slide-next-enter .cocktail-image {
+    animation: slideInFromRight 0.4s ease-out forwards;
+}
+
+.cocktail-card.slide-next-exit .cocktail-image {
+    animation: slideOutToLeft 0.4s ease-in forwards;
+}
+
+.cocktail-card.slide-prev-enter .cocktail-image {
+    animation: slideInFromLeft 0.4s ease-out forwards;
+}
+
+.cocktail-card.slide-prev-exit .cocktail-image {
+    animation: slideOutToRight 0.4s ease-in forwards;
+}
+
+.cocktail-card.fade-in .cocktail-image {
+    animation: fadeInScale 0.3s ease-out forwards;
+}
+
+/* Для плавного переключения на мобильных устройствах */
+@media (max-width: 767px) {
+    .cocktail-card.slide-next-enter .cocktail-image,
+    .cocktail-card.slide-prev-enter .cocktail-image {
+        animation-duration: 0.3s;
+    }
+    
+    .cocktail-card.slide-next-exit .cocktail-image,
+    .cocktail-card.slide-prev-exit .cocktail-image {
+        animation-duration: 0.3s;
+    }
+}
+
+/* Анимация для кнопок навигации */
+.nav-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Анимация для названия коктейля в модальном окне */
+.modal-title {
+    animation: fadeInScale 0.3s ease 0.1s both;
+}
+
+/* Анимация для содержимого модального окна */
+.composition-content {
+    animation: fadeInScale 0.3s ease 0.2s both;
 }
 
 /* ===== ПЛАНШЕТЫ (768px+) ===== */
@@ -548,6 +681,13 @@ body {
         width: 100%;
         max-width: 280px;
     }
+    
+    /* Убираем выделение при активном состоянии на мобильных устройствах */
+    .nav-btn:active,
+    .action-btn:active {
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
 }
 
 /* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (<360px) ===== */
@@ -614,10 +754,6 @@ body {
         opacity: 1;
         transform: scale(1);
     }
-}
-
-.cocktail-card {
-    animation: fadeIn 0.3s ease;
 }
 
 /* ===== ГАРАНТИЯ ОТСУТСТВИЯ ПРОКРУТКИ ===== */
@@ -717,4 +853,41 @@ body {
     .composition-content {
         font-size: 13px;
     }
+}
+
+/* ===== УБИРАЕМ СТАНДАРТНЫЕ ВЫДЕЛЕНИЯ БРАУЗЕРА ===== */
+
+/* Убираем синее выделение при нажатии на кнопки */
+button, 
+a {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+/* Убираем выделение при фокусе */
+button:focus,
+.nav-btn:focus,
+.action-btn:focus,
+.modal-close:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Убираем стандартное выделение при клике на изображение */
+.cocktail-image:active,
+.cocktail-image:focus {
+    outline: none;
+}
+
+/* Убираем выделение для всего документа при клике */
+*:focus {
+    outline: none;
+}
+
+/* Для элементов ввода (если будут добавлены в будущем) */
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
