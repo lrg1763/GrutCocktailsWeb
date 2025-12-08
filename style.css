@@ -255,13 +255,7 @@ body {
     height: 18px;
 }
 
-.download-btn {
-    /* Стили уже определены в .action-btn */
-}
 
-.composition-btn {
-    /* Стили уже определены в .action-btn */
-}
 
 /* ===== МОДАЛЬНОЕ ОКНО ===== */
 .modal-overlay {
