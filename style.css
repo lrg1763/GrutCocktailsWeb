@@ -83,16 +83,17 @@ body {
 
 .cocktail-card {
     width: 100%;
-    max-width: 320px;
+    max-width: 360px;
     background: transparent;
     flex-shrink: 0;
     position: relative;
     animation: fadeIn 0.3s ease;
+    overflow: hidden;
 }
 
 .cocktail-image {
     width: 100%;
-    height: 450px;
+    height: 500px;
     background-color: #1a1a1a;
     display: flex;
     align-items: center;
@@ -117,33 +118,30 @@ body {
 .nav-btn {
     position: absolute;
     top: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent;
     border: none;
     color: #ffffff;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    width: auto;
+    height: auto;
     cursor: pointer;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, opacity 0.3s ease;
     flex-shrink: 0;
-    transform: translateY(-50%);
     -webkit-tap-highlight-color: transparent;
     outline: none;
+    padding: 0;
+    will-change: transform;
+}
+
+.nav-btn svg {
+    transition: transform 0.3s ease;
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.nav-btn:active {
-    transform: translateY(-50%) scale(0.95);
+    opacity: 0.8;
 }
 
 .nav-btn:focus {
@@ -151,37 +149,67 @@ body {
     box-shadow: none;
 }
 
-/* СТРЕЛКИ ПО ЦЕНТРУ КРАЯ ФОТО */
+/* СТРЕЛКИ ВНУТРИ КРАЯ ФОТО - ОСТРИЕ ВПРИТЫК К КРАЮ ИЗОБРАЖЕНИЯ */
 .prev-btn {
-    left: 0;
-    transform: translate(-50%, -50%);
+    left: 10px !important;
+    transform: translateY(-50%) !important;
+    padding: 0 !important;
+}
+
+.prev-btn svg {
+    /* Острие левой стрелки на 9/24 = 37.5% от левого края SVG
+       Смещаем влево на 25%, чтобы острие было близко к краю, но стрелка полностью внутри */
+    transform: translateX(-25%) !important;
 }
 
 .next-btn {
-    right: 0;
-    transform: translate(50%, -50%);
+    right: 10px !important;
+    transform: translateY(-50%) !important;
+    padding: 0 !important;
+}
+
+.next-btn svg {
+    /* Острие правой стрелки на 15/24 = 62.5% от левого края (37.5% от правого)
+       Смещаем вправо на 25%, чтобы острие было близко к краю, но стрелка полностью внутри */
+    transform: translateX(25%) !important;
 }
 
 /* Эффекты при наведении с учетом нового позиционирования */
 .prev-btn:hover {
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.prev-btn:hover svg {
+    transform: translateX(-25%) !important; /* Сохраняем позицию острия при hover */
 }
 
 .prev-btn:active {
-    transform: translate(-50%, -50%) scale(0.95);
+    transform: translateY(-50%) scale(0.95) !important;
+}
+
+.prev-btn:active svg {
+    transform: translateX(-25%) !important; /* Сохраняем позицию острия при active */
 }
 
 .next-btn:hover {
-    transform: translate(50%, -50%) scale(1.1);
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.next-btn:hover svg {
+    transform: translateX(25%) !important; /* Сохраняем позицию острия при hover */
 }
 
 .next-btn:active {
-    transform: translate(50%, -50%) scale(0.95);
+    transform: translateY(-50%) scale(0.95) !important;
+}
+
+.next-btn:active svg {
+    transform: translateX(25%) !important; /* Сохраняем позицию острия при active */
 }
 
 .nav-btn svg {
-    width: 22px;
-    height: 22px;
+    width: 48px;
+    height: 48px;
 }
 
 /* ===== НИЖНИЕ КНОПКИ ===== */
@@ -360,11 +388,18 @@ body {
 .composition-content {
     font-size: 16px;
     line-height: 1.6;
-    text-align: center;
+    text-align: left;
 }
 
 .composition-content p {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.composition-content > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .composition-content ul {
@@ -520,21 +555,28 @@ body {
     }
     
     .cocktail-card {
-        max-width: 400px;
+        max-width: 450px;
     }
     
     .cocktail-image {
-        height: 500px;
+        height: 550px;
     }
     
     .nav-btn {
-        width: 50px;
-        height: 50px;
+        padding: 10px;
+    }
+    
+    .prev-btn {
+        left: 10px !important;
+    }
+    
+    .next-btn {
+        right: 10px !important;
     }
     
     .nav-btn svg {
-        width: 22px;
-        height: 22px;
+        width: 52px;
+        height: 52px;
     }
     
     .counter {
@@ -568,7 +610,7 @@ body {
 /* ===== ДЕСКТОПЫ (1024px+) ===== */
 @media (min-width: 1024px) {
     .main {
-        max-width: 600px;
+        max-width: 500px;
     }
     
     .header {
@@ -576,7 +618,7 @@ body {
     }
     
     .title {
-        font-size: 26px;
+        font-size: 24px;
         letter-spacing: 3px;
         flex-direction: row;
         justify-content: center;
@@ -594,26 +636,33 @@ body {
     }
     
     .price {
-        font-size: 26px;
+        font-size: 24px;
         white-space: nowrap;
     }
     
     .cocktail-card {
-        max-width: 450px;
+        max-width: 400px;
     }
     
     .cocktail-image {
-        height: 550px;
+        height: 530px;
     }
     
     .nav-btn {
-        width: 60px;
-        height: 60px;
+        padding: 12px;
+    }
+    
+    .prev-btn {
+        left: 10px !important;
+    }
+    
+    .next-btn {
+        right: 10px !important;
     }
     
     .nav-btn svg {
-        width: 24px;
-        height: 24px;
+        width: 54px;
+        height: 54px;
     }
     
     .action-buttons {
@@ -622,22 +671,27 @@ body {
     }
     
     .action-btn {
-        max-width: 220px;
+        max-width: 200px;
+        font-size: 16px;
+    }
+    
+    .counter {
+        font-size: 16px;
     }
     
     .modal-content {
         max-width: 500px;
-        padding: 50px 40px 40px;
+        padding: 45px 35px 35px;
     }
     
     .modal-title {
-        font-size: 26px;
-        margin-bottom: 35px;
-        padding: 0 60px;
+        font-size: 24px;
+        margin-bottom: 30px;
+        padding: 0 50px;
     }
     
     .composition-content {
-        font-size: 18px;
+        font-size: 17px;
     }
 }
 
@@ -657,23 +711,47 @@ body {
     
     /* Увеличиваем стрелки на мобильных */
     .nav-btn {
+        padding: 10px;
+    }
+    
+    .prev-btn {
+        left: 10px !important;
+    }
+    
+    .next-btn {
+        right: 10px !important;
+    }
+    
+    .nav-btn svg {
         width: 52px;
         height: 52px;
     }
     
-    .nav-btn svg {
-        width: 24px;
-        height: 24px;
-    }
-    
     .action-buttons {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+        padding: 0 10px;
     }
     
     .action-btn {
-        width: 100%;
-        max-width: 280px;
+        width: auto;
+        max-width: 140px;
+        flex: 0 1 auto;
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+    
+    .action-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .counter {
+        font-size: 14px;
+        padding: 6px 14px;
     }
     
     /* Убираем выделение при активном состоянии на мобильных устройствах */
@@ -681,6 +759,36 @@ body {
     .action-btn:active {
         outline: none;
         -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* ===== МОБИЛЬНЫЕ СРЕДНИЕ (480px - 767px) ===== */
+@media (min-width: 480px) and (max-width: 767px) {
+    .action-btn {
+        max-width: 160px;
+        font-size: 15px;
+        padding: 11px 18px;
+    }
+    
+    .action-buttons {
+        gap: 12px;
+    }
+    
+    .counter {
+        font-size: 15px;
+    }
+}
+
+/* ===== МОБИЛЬНЫЕ МАЛЕНЬКИЕ (360px - 479px) ===== */
+@media (min-width: 360px) and (max-width: 479px) {
+    .action-btn {
+        max-width: 135px;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .action-buttons {
+        gap: 9px;
     }
 }
 
@@ -705,22 +813,45 @@ body {
     }
     
     .cocktail-image {
-        height: 400px;
+        height: 430px;
     }
     
     .nav-btn {
-        width: 48px;
-        height: 48px;
+        padding: 8px;
+    }
+    
+    .prev-btn {
+        left: 10px !important;
+    }
+    
+    .next-btn {
+        right: 10px !important;
     }
     
     .nav-btn svg {
-        width: 22px;
-        height: 22px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .action-buttons {
+        gap: 8px;
+        padding: 0 5px;
     }
     
     .action-btn {
-        font-size: 14px;
-        padding: 10px 16px;
+        max-width: 120px;
+        font-size: 13px;
+        padding: 9px 14px;
+    }
+    
+    .action-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .counter {
+        font-size: 13px;
+        padding: 6px 12px;
     }
     
     .modal-content {
@@ -775,11 +906,18 @@ body {
     }
     
     .cocktail-image {
-        height: 350px;
+        height: 380px;
     }
     
     .action-buttons {
-        gap: 10px;
+        gap: 8px;
+        flex-direction: row;
+    }
+    
+    .action-btn {
+        max-width: 130px;
+        font-size: 13px;
+        padding: 9px 14px;
     }
     
     .modal-content {
@@ -812,7 +950,7 @@ body {
     }
     
     .cocktail-image {
-        height: 300px;
+        height: 320px;
     }
     
     .title {
@@ -828,9 +966,20 @@ body {
         padding: 6px 12px;
     }
     
+    .action-buttons {
+        gap: 6px;
+        flex-direction: row;
+    }
+    
     .action-btn {
-        font-size: 13px;
-        padding: 8px 14px;
+        max-width: 120px;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    .action-btn svg {
+        width: 14px;
+        height: 14px;
     }
     
     .modal-content {

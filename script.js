@@ -353,10 +353,51 @@ function showComposition() {
     // Обновляем заголовок модального окна
     modalTitle.textContent = currentCocktail.name;
     
+    // Разделяем состав на ингредиенты и украшение
+    const compositionText = currentCocktail.composition;
+    const parts = compositionText.split('. ');
+    
+    let ingredients = [];
+    let decoration = '';
+    
+    if (parts.length > 1 && parts[parts.length - 1].toLowerCase().includes('украшение')) {
+        decoration = parts[parts.length - 1].replace(/^[Уу]крашение:\s*/i, '').replace(/\.$/, '');
+        const ingredientsText = parts.slice(0, -1).join('. ');
+        ingredients = ingredientsText.split(',').map(ing => ing.trim()).filter(ing => ing);
+    } else {
+        // Если нет "Украшение", разделяем по запятым
+        ingredients = compositionText.split(',').map(ing => ing.trim().replace(/\.$/, '')).filter(ing => ing);
+    }
+    
+    // Функция для капитализации первой буквы слова
+    function capitalizeFirstLetter(str) {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+    
+    // Формируем HTML с каждым ингредиентом в отдельной строке с точкой перед словом
+    let ingredientsHTML = '';
+    ingredients.forEach((ingredient, index) => {
+        if (ingredient) {
+            const capitalizedIngredient = capitalizeFirstLetter(ingredient.trim());
+            ingredientsHTML += `<p style="margin-bottom: 12px; color: #ffffff;">• ${capitalizedIngredient}</p>`;
+        }
+    });
+    
+    // Добавляем украшение, если есть
+    let decorationHTML = '';
+    if (decoration) {
+        const capitalizedDecoration = capitalizeFirstLetter(decoration.trim());
+        decorationHTML = `<p style="margin-top: 16px; margin-bottom: 12px; color: #ffffff; font-weight: 500;">• Украшение: ${capitalizedDecoration}</p>`;
+    }
+    
     // Обновляем содержимое состава с реальным объемом
     compositionContent.innerHTML = `
-        <p style="margin-bottom: 20px; font-size: 18px; color: #ffffff;">${currentCocktail.composition}</p>
-        <p style="color: #999; font-size: 14px;">Объем: ${currentCocktail.volume}</p>
+        <div style="text-align: left;">
+            ${ingredientsHTML}
+            ${decorationHTML}
+            <p style="margin-top: 20px; color: #999; font-size: 14px; text-align: center;">Объем: ${currentCocktail.volume}</p>
+        </div>
     `;
     
     // Показываем модальное окно
@@ -426,15 +467,45 @@ function handleKeyboard(e) {
 
 // Инициализация при загрузке страницы
 function init() {
+    // #region agent log
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevSvg = prevBtn.querySelector('svg');
+    const nextSvg = nextBtn.querySelector('svg');
+    
+    // Логируем начальные размеры и позиции стрелок
+    const prevRect = prevBtn.getBoundingClientRect();
+    const nextRect = nextBtn.getBoundingClientRect();
+    const prevSvgRect = prevSvg.getBoundingClientRect();
+    const nextSvgRect = nextSvg.getBoundingClientRect();
+    const computedPrevBtn = window.getComputedStyle(prevBtn);
+    const computedNextBtn = window.getComputedStyle(nextBtn);
+    const computedPrevSvg = window.getComputedStyle(prevSvg);
+    const computedNextSvg = window.getComputedStyle(nextSvg);
+    
+    fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:428',message:'Arrow buttons initial state',data:{prevBtn:{rect:prevRect,computed:{width:computedPrevBtn.width,height:computedPrevBtn.height,left:computedPrevBtn.left,right:computedPrevBtn.right,transform:computedPrevBtn.transform}},prevSvg:{rect:prevSvgRect,computed:{width:computedPrevSvg.width,height:computedPrevSvg.height},htmlAttrs:{width:prevSvg.getAttribute('width'),height:prevSvg.getAttribute('height')}},nextBtn:{rect:nextRect,computed:{width:computedNextBtn.width,height:computedNextBtn.height,left:computedNextBtn.left,right:computedNextBtn.right,transform:computedNextBtn.transform}},nextSvg:{rect:nextSvgRect,computed:{width:computedNextSvg.width,height:computedNextSvg.height},htmlAttrs:{width:nextSvg.getAttribute('width'),height:nextSvg.getAttribute('height')}},screenWidth:window.innerWidth},timestamp:Date.now(),sessionId:'debug-session',runId:'init',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    
     // Сначала показываем первый коктейль с fade анимацией
     updateDisplay(); // без направления - fade анимация
     
     // Начинаем предзагрузку изображений в фоне
     preloadImages();
     
+    // #region agent log
+    // Логируем размеры после загрузки изображения
+    setTimeout(() => {
+        const prevBtnAfter = document.getElementById('prevBtn');
+        const nextBtnAfter = document.getElementById('nextBtn');
+        const prevRectAfter = prevBtnAfter.getBoundingClientRect();
+        const nextRectAfter = nextBtnAfter.getBoundingClientRect();
+        fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:455',message:'Arrow buttons after image load',data:{prevBtn:{rect:prevRectAfter},nextBtn:{rect:nextRectAfter}},timestamp:Date.now(),sessionId:'debug-session',runId:'init',hypothesisId:'B'})}).catch(()=>{});
+    }, 500);
+    // #endregion
+    
     // Добавляем обработчики событий для кнопок
-    document.getElementById('prevBtn').addEventListener('click', prevCocktail);
-    document.getElementById('nextBtn').addEventListener('click', nextCocktail);
+    prevBtn.addEventListener('click', prevCocktail);
+    nextBtn.addEventListener('click', nextCocktail);
     document.getElementById('downloadBtn').addEventListener('click', downloadCurrentPhoto);
     compositionBtn.addEventListener('click', showComposition);
     modalClose.addEventListener('click', hideComposition);
@@ -448,6 +519,23 @@ function init() {
     
     // Добавляем обработчик для клавиатуры
     document.addEventListener('keydown', handleKeyboard);
+    
+    // #region agent log
+    // Логируем при изменении размера окна
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const prevBtnResize = document.getElementById('prevBtn');
+            const nextBtnResize = document.getElementById('nextBtn');
+            const prevSvgResize = prevBtnResize.querySelector('svg');
+            const nextSvgResize = nextBtnResize.querySelector('svg');
+            const computedPrevBtnResize = window.getComputedStyle(prevBtnResize);
+            const computedPrevSvgResize = window.getComputedStyle(prevSvgResize);
+            fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:472',message:'Arrow buttons on resize',data:{screenWidth:window.innerWidth,prevBtn:{computed:{width:computedPrevBtnResize.width,height:computedPrevBtnResize.height,left:computedPrevBtnResize.left},rect:prevBtnResize.getBoundingClientRect()},prevSvg:{computed:{width:computedPrevSvgResize.width,height:computedPrevSvgResize.height},htmlAttrs:{width:prevSvgResize.getAttribute('width'),height:prevSvgResize.getAttribute('height')}}},timestamp:Date.now(),sessionId:'debug-session',runId:'resize',hypothesisId:'C'})}).catch(()=>{});
+        }, 250);
+    });
+    // #endregion
     
     // Добавляем обработчик для свайпов на мобильных устройствах
     let touchStartX = 0;
