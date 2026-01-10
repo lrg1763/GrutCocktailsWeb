@@ -169,8 +169,6 @@ const compositionBtn = document.getElementById('compositionBtn');
 
 // Функция для предзагрузки изображений
 function preloadImages() {
-    console.log('Начинаем предзагрузку изображений...');
-    
     let loadedCount = 0;
     const totalCount = cocktails.length;
     
@@ -178,18 +176,17 @@ function preloadImages() {
     function showLoadingProgress() {
         const cocktailImage = document.getElementById('cocktailImage');
         cocktailImage.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #666; font-size: 16px; background: #1a1a1a; border-radius: 8px; font-family: 'Martian Mono', monospace;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #666; font-size: 16px; background: #1a1a1a; border-radius: 0; font-family: 'Martian Mono', monospace;">
                 <div style="margin-bottom: 10px;">Загрузка изображений...</div>
                 <div style="font-size: 14px; color: #999;">${loadedCount}/${totalCount}</div>
             </div>
         `;
     }
     
-    // Показываем индикатор загрузки сразу
     showLoadingProgress();
     
     // Предзагружаем все изображения
-    const preloadPromises = cocktails.map((cocktail, index) => {
+    const preloadPromises = cocktails.map((cocktail) => {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = cocktail.image;
@@ -198,14 +195,12 @@ function preloadImages() {
             img.onload = function() {
                 loadedCount++;
                 cocktail.preloadedImage = img;
-                console.log(`Загружено: ${cocktail.name} (${loadedCount}/${totalCount})`);
                 showLoadingProgress();
                 resolve();
             };
             
             img.onerror = function() {
                 loadedCount++;
-                console.error(`Ошибка загрузки: ${cocktail.image}`);
                 cocktail.preloadedImage = null;
                 showLoadingProgress();
                 resolve();
@@ -213,11 +208,9 @@ function preloadImages() {
         });
     });
     
-    // Когда все изображения загружены
     return Promise.all(preloadPromises).then(() => {
         imagesPreloaded = true;
-        console.log('Все изображения предзагружены!');
-        updateDisplay(); // Обновляем отображение после загрузки
+        updateDisplay();
     });
 }
 
@@ -234,7 +227,7 @@ function updateImageContent() {
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
-        img.style.borderRadius = '8px';
+        img.style.borderRadius = '0';
         img.style.backgroundColor = '#000000';
         cocktailImage.appendChild(img);
     } else {
@@ -245,13 +238,12 @@ function updateImageContent() {
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
-        img.style.borderRadius = '8px';
+        img.style.borderRadius = '0';
         img.style.backgroundColor = '#000000';
         
         img.onerror = function() {
-            console.error('Ошибка загрузки изображения:', currentCocktail.image);
             cocktailImage.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; font-size: 16px; background: #1a1a1a; border-radius: 8px; font-family: 'Martian Mono', monospace;">
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; font-size: 16px; background: #1a1a1a; border-radius: 0; font-family: 'Martian Mono', monospace;">
                     Ошибка: ${currentCocktail.name}
                 </div>
             `;
@@ -377,7 +369,7 @@ function showComposition() {
     
     // Формируем HTML с каждым ингредиентом в отдельной строке с точкой перед словом
     let ingredientsHTML = '';
-    ingredients.forEach((ingredient, index) => {
+    ingredients.forEach((ingredient) => {
         if (ingredient) {
             const capitalizedIngredient = capitalizeFirstLetter(ingredient.trim());
             ingredientsHTML += `<p style="margin-bottom: 12px; color: #ffffff;">• ${capitalizedIngredient}</p>`;
@@ -424,34 +416,18 @@ function downloadCurrentPhoto() {
 
 // Функция для перехода к следующему коктейлю
 function nextCocktail() {
-    // Если анимация уже выполняется, не делаем ничего
     if (isAnimating) return;
     
     currentCocktailIndex = (currentCocktailIndex + 1) % cocktails.length;
     updateDisplay('next');
-    
-    // Анимация для кнопки следующего коктейля
-    const nextBtn = document.getElementById('nextBtn');
-    nextBtn.style.transform = 'translate(50%, -50%) scale(0.9)';
-    setTimeout(() => {
-        nextBtn.style.transform = 'translate(50%, -50%) scale(1)';
-    }, 150);
 }
 
 // Функция для перехода к предыдущему коктейлю
 function prevCocktail() {
-    // Если анимация уже выполняется, не делаем ничего
     if (isAnimating) return;
     
     currentCocktailIndex = (currentCocktailIndex - 1 + cocktails.length) % cocktails.length;
     updateDisplay('prev');
-    
-    // Анимация для кнопки предыдущего коктейля
-    const prevBtn = document.getElementById('prevBtn');
-    prevBtn.style.transform = 'translate(-50%, -50%) scale(0.9)';
-    setTimeout(() => {
-        prevBtn.style.transform = 'translate(-50%, -50%) scale(1)';
-    }, 150);
 }
 
 // Функция для обработки клавиатуры
@@ -467,41 +443,14 @@ function handleKeyboard(e) {
 
 // Инициализация при загрузке страницы
 function init() {
-    // #region agent log
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const prevSvg = prevBtn.querySelector('svg');
-    const nextSvg = nextBtn.querySelector('svg');
-    
-    // Логируем начальные размеры и позиции стрелок
-    const prevRect = prevBtn.getBoundingClientRect();
-    const nextRect = nextBtn.getBoundingClientRect();
-    const prevSvgRect = prevSvg.getBoundingClientRect();
-    const nextSvgRect = nextSvg.getBoundingClientRect();
-    const computedPrevBtn = window.getComputedStyle(prevBtn);
-    const computedNextBtn = window.getComputedStyle(nextBtn);
-    const computedPrevSvg = window.getComputedStyle(prevSvg);
-    const computedNextSvg = window.getComputedStyle(nextSvg);
-    
-    fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:428',message:'Arrow buttons initial state',data:{prevBtn:{rect:prevRect,computed:{width:computedPrevBtn.width,height:computedPrevBtn.height,left:computedPrevBtn.left,right:computedPrevBtn.right,transform:computedPrevBtn.transform}},prevSvg:{rect:prevSvgRect,computed:{width:computedPrevSvg.width,height:computedPrevSvg.height},htmlAttrs:{width:prevSvg.getAttribute('width'),height:prevSvg.getAttribute('height')}},nextBtn:{rect:nextRect,computed:{width:computedNextBtn.width,height:computedNextBtn.height,left:computedNextBtn.left,right:computedNextBtn.right,transform:computedNextBtn.transform}},nextSvg:{rect:nextSvgRect,computed:{width:computedNextSvg.width,height:computedNextSvg.height},htmlAttrs:{width:nextSvg.getAttribute('width'),height:nextSvg.getAttribute('height')}},screenWidth:window.innerWidth},timestamp:Date.now(),sessionId:'debug-session',runId:'init',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     
     // Сначала показываем первый коктейль с fade анимацией
-    updateDisplay(); // без направления - fade анимация
+    updateDisplay();
     
     // Начинаем предзагрузку изображений в фоне
     preloadImages();
-    
-    // #region agent log
-    // Логируем размеры после загрузки изображения
-    setTimeout(() => {
-        const prevBtnAfter = document.getElementById('prevBtn');
-        const nextBtnAfter = document.getElementById('nextBtn');
-        const prevRectAfter = prevBtnAfter.getBoundingClientRect();
-        const nextRectAfter = nextBtnAfter.getBoundingClientRect();
-        fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:455',message:'Arrow buttons after image load',data:{prevBtn:{rect:prevRectAfter},nextBtn:{rect:nextRectAfter}},timestamp:Date.now(),sessionId:'debug-session',runId:'init',hypothesisId:'B'})}).catch(()=>{});
-    }, 500);
-    // #endregion
     
     // Добавляем обработчики событий для кнопок
     prevBtn.addEventListener('click', prevCocktail);
@@ -519,23 +468,6 @@ function init() {
     
     // Добавляем обработчик для клавиатуры
     document.addEventListener('keydown', handleKeyboard);
-    
-    // #region agent log
-    // Логируем при изменении размера окна
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            const prevBtnResize = document.getElementById('prevBtn');
-            const nextBtnResize = document.getElementById('nextBtn');
-            const prevSvgResize = prevBtnResize.querySelector('svg');
-            const nextSvgResize = nextBtnResize.querySelector('svg');
-            const computedPrevBtnResize = window.getComputedStyle(prevBtnResize);
-            const computedPrevSvgResize = window.getComputedStyle(prevSvgResize);
-            fetch('http://127.0.0.1:7248/ingest/6affbff5-b0e6-48ff-abc7-c7e83f16c827',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'script.js:472',message:'Arrow buttons on resize',data:{screenWidth:window.innerWidth,prevBtn:{computed:{width:computedPrevBtnResize.width,height:computedPrevBtnResize.height,left:computedPrevBtnResize.left},rect:prevBtnResize.getBoundingClientRect()},prevSvg:{computed:{width:computedPrevSvgResize.width,height:computedPrevSvgResize.height},htmlAttrs:{width:prevSvgResize.getAttribute('width'),height:prevSvgResize.getAttribute('height')}}},timestamp:Date.now(),sessionId:'debug-session',runId:'resize',hypothesisId:'C'})}).catch(()=>{});
-        }, 250);
-    });
-    // #endregion
     
     // Добавляем обработчик для свайпов на мобильных устройствах
     let touchStartX = 0;
