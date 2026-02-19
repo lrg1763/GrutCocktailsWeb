@@ -50,33 +50,9 @@ GrutCocktailsWeb/
 
 ##  Запуск проекта
 
-### Способ 1: Открыть файл напрямую
+### Открыть файл напрямую
 
 Просто откройте файл `index.html` в браузере.
-
-### Способ 2: Использовать локальный веб-сервер (рекомендуется)
-
-#### Через Python:
-```bash
-cd /Users/maxosavchuk/Documents/GrutCocktailsWeb
-python3 -m http.server 8000
-```
-
-Затем откройте в браузере: `http://localhost:8000`
-
-#### Через http-server (Node.js):
-```bash
-cd /Users/maxosavchuk/Documents/GrutCocktailsWeb
-http-server -p 8000
-```
-
-Затем откройте в браузере: `http://localhost:8000`
-
-#### Через PHP:
-```bash
-cd /Users/maxosavchuk/Documents/GrutCocktailsWeb
-php -S localhost:8000
-```
 
 ##  Функциональность
 
