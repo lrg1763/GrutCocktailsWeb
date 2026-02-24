@@ -1,5 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&display=swap&subset=cyrillic');
 
+:root {
+    --color-bg: #000000;
+    --color-text: #ffffff;
+    --color-muted: #666;
+    --color-border: rgba(255, 255, 255, 0.2);
+    --color-surface: rgba(255, 255, 255, 0.1);
+    --color-surface-hover: rgba(255, 255, 255, 0.2);
+    --font-mono: 'Martian Mono', monospace;
+    --radius-btn: 25px;
+    --radius-modal: 12px;
+    --nav-arrow-inset: 10px;
+    --nav-arrow-size: 52px;
+    --card-max-width: 360px;
+    --image-height: 470px;
+    --transition-base: 0.3s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,19 +25,19 @@
 
 html, body {
     height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: var(--color-bg);
+    color: var(--color-text);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    font-family: 'Martian Mono', monospace;
-    overflow: hidden;
+    padding: 28px 20px 20px;
+    font-family: var(--font-mono);
 }
 
 /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
@@ -37,7 +54,8 @@ body {
 /* ===== ЗАГОЛОВОК ===== */
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-top: 8px;
+    margin-bottom: 30px;
     width: 100%;
     padding: 0 20px;
     flex-shrink: 0;
@@ -48,8 +66,8 @@ body {
     font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #ffffff;
-    font-family: 'Martian Mono', monospace;
+    color: var(--color-text);
+    font-family: var(--font-mono);
     line-height: 1.2;
     display: flex;
     flex-direction: column;
@@ -63,8 +81,8 @@ body {
 
 .price {
     font-size: 26px;
-    color: #ffffff;
-    font-family: 'Martian Mono', monospace;
+    color: var(--color-text);
+    font-family: var(--font-mono);
     letter-spacing: 1px;
     font-weight: 400;
     text-transform: uppercase;
@@ -77,13 +95,13 @@ body {
     justify-content: center;
     width: 100%;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     flex-shrink: 0;
 }
 
 .cocktail-card {
     width: 100%;
-    max-width: 360px;
+    max-width: var(--card-max-width);
     background: transparent;
     flex-shrink: 0;
     position: relative;
@@ -93,16 +111,16 @@ body {
 
 .cocktail-image {
     width: 100%;
-    height: 500px;
+    height: var(--image-height);
     background-color: #1a1a1a;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--color-muted);
     font-size: 14px;
     border-radius: 0;
     flex-shrink: 0;
-    font-family: 'Martian Mono', monospace;
+    font-family: var(--font-mono);
     text-transform: uppercase;
 }
 
@@ -111,16 +129,16 @@ body {
     height: 100%;
     object-fit: contain;
     border-radius: 0;
-    background-color: #000000;
+    background-color: var(--color-bg);
 }
 
-/* ===== КНОПКИ НАВИГАЦИИ ===== */
+/* ===== КНОПКИ НАВИГАЦИИ (стрелки) ===== */
 .nav-btn {
     position: absolute;
     top: 50%;
     background: transparent;
     border: none;
-    color: #ffffff;
+    color: var(--color-text);
     width: auto;
     height: auto;
     cursor: pointer;
@@ -128,16 +146,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    padding: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
     outline: none;
-    padding: 0;
     will-change: transform;
 }
 
 .nav-btn svg {
-    transition: transform 0.3s ease;
+    width: var(--nav-arrow-size);
+    height: var(--nav-arrow-size);
+    transition: transform var(--transition-base);
 }
 
 .nav-btn:hover {
@@ -149,67 +169,50 @@ body {
     box-shadow: none;
 }
 
-/* СТРЕЛКИ ВНУТРИ КРАЯ ФОТО - ОСТРИЕ ВПРИТЫК К КРАЮ ИЗОБРАЖЕНИЯ */
 .prev-btn {
-    left: 10px !important;
+    left: var(--nav-arrow-inset) !important;
     transform: translateY(-50%) !important;
     padding: 0 !important;
 }
 
 .prev-btn svg {
-    /* Острие левой стрелки на 9/24 = 37.5% от левого края SVG
-       Смещаем влево на 25%, чтобы острие было близко к краю, но стрелка полностью внутри */
     transform: translateX(-25%) !important;
 }
 
 .next-btn {
-    right: 10px !important;
+    right: var(--nav-arrow-inset) !important;
     transform: translateY(-50%) !important;
     padding: 0 !important;
 }
 
 .next-btn svg {
-    /* Острие правой стрелки на 15/24 = 62.5% от левого края (37.5% от правого)
-       Смещаем вправо на 25%, чтобы острие было близко к краю, но стрелка полностью внутри */
     transform: translateX(25%) !important;
 }
 
-/* Эффекты при наведении с учетом нового позиционирования */
 .prev-btn:hover {
     transform: translateY(-50%) scale(1.1) !important;
 }
 
-.prev-btn:hover svg {
-    transform: translateX(-25%) !important; /* Сохраняем позицию острия при hover */
+.prev-btn:hover svg,
+.prev-btn:active svg {
+    transform: translateX(-25%) !important;
 }
 
 .prev-btn:active {
     transform: translateY(-50%) scale(0.95) !important;
 }
 
-.prev-btn:active svg {
-    transform: translateX(-25%) !important; /* Сохраняем позицию острия при active */
-}
-
 .next-btn:hover {
     transform: translateY(-50%) scale(1.1) !important;
 }
 
-.next-btn:hover svg {
-    transform: translateX(25%) !important; /* Сохраняем позицию острия при hover */
+.next-btn:hover svg,
+.next-btn:active svg {
+    transform: translateX(25%) !important;
 }
 
 .next-btn:active {
     transform: translateY(-50%) scale(0.95) !important;
-}
-
-.next-btn:active svg {
-    transform: translateX(25%) !important; /* Сохраняем позицию острия при active */
-}
-
-.nav-btn svg {
-    width: 48px;
-    height: 48px;
 }
 
 /* ===== НИЖНИЕ КНОПКИ ===== */
@@ -217,19 +220,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     flex-shrink: 0;
-    margin-top: 10px;
+    margin-top: 8px;
     width: 100%;
 }
 
 .counter {
-    font-size: 16px;
-    color: #ffffff;
-    font-family: 'Martian Mono', monospace;
+    font-size: 14px;
+    color: var(--color-text);
+    font-family: var(--font-mono);
     letter-spacing: 1px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    background: var(--color-surface);
     border-radius: 20px;
     backdrop-filter: blur(10px);
     text-transform: uppercase;
@@ -237,35 +240,39 @@ body {
 
 .action-buttons {
     display: flex;
-    gap: 12px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     justify-content: center;
+    padding: 0 10px;
 }
 
 .action-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    padding: 12px 20px;
-    border-radius: 25px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 10px 16px;
+    border-radius: var(--radius-btn);
     cursor: pointer;
-    font-family: 'Martian Mono', monospace;
-    font-size: 16px;
+    font-family: var(--font-mono);
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     backdrop-filter: blur(10px);
     text-transform: uppercase;
-    flex: 1;
-    max-width: 200px;
+    width: auto;
+    max-width: 140px;
+    flex: 0 1 auto;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     outline: none;
 }
 
 .action-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--color-surface-hover);
     transform: translateY(-2px);
 }
 
@@ -279,8 +286,8 @@ body {
 }
 
 .action-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 
@@ -288,10 +295,7 @@ body {
 /* ===== МОДАЛЬНОЕ ОКНО ===== */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
@@ -299,7 +303,7 @@ body {
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     backdrop-filter: blur(10px);
 }
 
@@ -309,17 +313,17 @@ body {
 }
 
 .modal-content {
-    background-color: #000000;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-modal);
     width: 90%;
-    max-width: 500px;
+    max-width: var(--card-max-width);
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
     padding: 40px 30px 30px;
     transform: translateY(20px);
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-base);
 }
 
 .modal-overlay.active .modal-content {
@@ -330,9 +334,9 @@ body {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -340,7 +344,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     backdrop-filter: blur(10px);
     z-index: 2;
     -webkit-tap-highlight-color: transparent;
@@ -348,7 +352,7 @@ body {
 }
 
 .modal-close:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--color-surface-hover);
     transform: scale(1.1);
 }
 
@@ -361,14 +365,13 @@ body {
     box-shadow: none;
 }
 
-/* ===== ОТЦЕНТРИРОВАННЫЙ ЗАГОЛОВОК МОДАЛЬНОГО ОКНА ===== */
 .modal-title {
     font-size: 22px;
     font-weight: 400;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #ffffff;
-    font-family: 'Martian Mono', monospace;
+    color: var(--color-text);
+    font-family: var(--font-mono);
     margin: 0 auto 25px;
     text-align: center;
     width: 100%;
@@ -378,11 +381,12 @@ body {
     box-sizing: border-box;
     position: relative;
     z-index: 1;
+    animation: fadeInScale 0.3s ease 0.1s both;
 }
 
 .modal-body {
-    font-family: 'Martian Mono', monospace;
-    color: #ffffff;
+    font-family: var(--font-mono);
+    color: var(--color-text);
 }
 
 .composition-content {
@@ -510,189 +514,8 @@ body {
     }
 }
 
-/* Анимация для кнопок навигации */
-.nav-btn {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Анимация для названия коктейля в модальном окне */
-.modal-title {
-    animation: fadeInScale 0.3s ease 0.1s both;
-}
-
-/* Анимация для содержимого модального окна */
 .composition-content {
     animation: fadeInScale 0.3s ease 0.2s both;
-}
-
-/* ===== ПЛАНШЕТЫ (768px+) ===== */
-@media (min-width: 768px) {
-    .header {
-        margin-bottom: 20px;
-    }
-    
-    .title {
-        font-size: 24px;
-        letter-spacing: 3px;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 10px;
-        line-height: 1.3;
-        white-space: nowrap;
-        flex-wrap: nowrap;
-    }
-    
-    .title-line {
-        display: inline;
-        white-space: nowrap;
-    }
-    
-    .price {
-        font-size: 24px;
-        white-space: nowrap;
-    }
-    
-    .cocktail-card {
-        max-width: 450px;
-    }
-    
-    .cocktail-image {
-        height: 550px;
-    }
-    
-    .nav-btn {
-        padding: 10px;
-    }
-    
-    .prev-btn {
-        left: 10px !important;
-    }
-    
-    .next-btn {
-        right: 10px !important;
-    }
-    
-    .nav-btn svg {
-        width: 52px;
-        height: 52px;
-    }
-    
-    .counter {
-        font-size: 18px;
-    }
-    
-    .action-btn {
-        font-size: 17px;
-        padding: 14px 24px;
-    }
-    
-    .action-buttons {
-        gap: 15px;
-    }
-    
-    .modal-content {
-        padding: 40px 35px 35px;
-    }
-    
-    .modal-title {
-        font-size: 24px;
-        margin-bottom: 30px;
-        padding: 0 50px;
-    }
-    
-    .composition-content {
-        font-size: 17px;
-    }
-}
-
-/* ===== ДЕСКТОПЫ (1024px+) ===== */
-@media (min-width: 1024px) {
-    .main {
-        max-width: 500px;
-    }
-    
-    .header {
-        margin-bottom: 20px;
-    }
-    
-    .title {
-        font-size: 24px;
-        letter-spacing: 3px;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 10px;
-        line-height: 1.3;
-        white-space: nowrap;
-        flex-wrap: nowrap;
-    }
-    
-    .title-line {
-        display: inline;
-        white-space: nowrap;
-    }
-    
-    .price {
-        font-size: 24px;
-        white-space: nowrap;
-    }
-    
-    .cocktail-card {
-        max-width: 400px;
-    }
-    
-    .cocktail-image {
-        height: 530px;
-    }
-    
-    .nav-btn {
-        padding: 12px;
-    }
-    
-    .prev-btn {
-        left: 10px !important;
-    }
-    
-    .next-btn {
-        right: 10px !important;
-    }
-    
-    .nav-btn svg {
-        width: 54px;
-        height: 54px;
-    }
-    
-    .action-buttons {
-        flex-direction: row;
-        gap: 20px;
-    }
-    
-    .action-btn {
-        max-width: 200px;
-        font-size: 16px;
-    }
-    
-    .counter {
-        font-size: 16px;
-    }
-    
-    .modal-content {
-        max-width: 500px;
-        padding: 45px 35px 35px;
-    }
-    
-    .modal-title {
-        font-size: 24px;
-        margin-bottom: 30px;
-        padding: 0 50px;
-    }
-    
-    .composition-content {
-        font-size: 17px;
-    }
 }
 
 /* ===== МОБИЛЬНЫЕ (до 767px) ===== */
@@ -707,24 +530,6 @@ body {
     
     .price {
         font-size: 26px;
-    }
-    
-    /* Увеличиваем стрелки на мобильных */
-    .nav-btn {
-        padding: 10px;
-    }
-    
-    .prev-btn {
-        left: 10px !important;
-    }
-    
-    .next-btn {
-        right: 10px !important;
-    }
-    
-    .nav-btn svg {
-        width: 52px;
-        height: 52px;
     }
     
     .action-buttons {
@@ -794,6 +599,10 @@ body {
 
 /* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (<360px) ===== */
 @media (max-width: 360px) {
+    :root {
+        --nav-arrow-size: 40px;
+    }
+    
     body {
         padding: 10px;
     }
@@ -818,19 +627,6 @@ body {
     
     .nav-btn {
         padding: 8px;
-    }
-    
-    .prev-btn {
-        left: 10px !important;
-    }
-    
-    .next-btn {
-        right: 10px !important;
-    }
-    
-    .nav-btn svg {
-        width: 40px;
-        height: 40px;
     }
     
     .action-buttons {
@@ -881,10 +677,33 @@ body {
     }
 }
 
-/* ===== ГАРАНТИЯ ОТСУТСТВИЯ ПРОКРУТКИ ===== */
+/* ===== КОМПАКТНАЯ ВЕРСТКА ПРИ МАЛОЙ ВЫСОТЕ ЭКРАНА ===== */
+@media (max-height: 800px) {
+    body {
+        padding: 20px 20px 16px;
+    }
+    
+    .header {
+        margin-bottom: 24px;
+    }
+    
+    .cocktail-container {
+        margin-bottom: 12px;
+    }
+    
+    .cocktail-image {
+        height: 420px;
+    }
+    
+    .bottom-controls {
+        gap: 10px;
+        margin-top: 6px;
+    }
+}
+
 @media (max-height: 700px) {
     body {
-        padding: 10px;
+        padding: 12px 20px 12px;
         justify-content: flex-start;
     }
     
@@ -998,39 +817,30 @@ body {
     }
 }
 
-/* ===== УБИРАЕМ СТАНДАРТНЫЕ ВЫДЕЛЕНИЯ БРАУЗЕРА ===== */
-
-/* Убираем синее выделение при нажатии на кнопки */
-button, 
+/* ===== ФОКУС И ВЫДЕЛЕНИЕ ===== */
+button,
 a {
     -webkit-tap-highlight-color: transparent;
     outline: none;
 }
 
-/* Убираем выделение при фокусе */
 button:focus,
 .nav-btn:focus,
 .action-btn:focus,
-.modal-close:focus {
+.modal-close:focus,
+.cocktail-image:focus,
+.cocktail-image:active {
     outline: none;
     box-shadow: none;
 }
 
-/* Убираем стандартное выделение при клике на изображение */
-.cocktail-image:active,
-.cocktail-image:focus {
-    outline: none;
-}
-
-/* Убираем выделение для всего документа при клике */
 *:focus {
     outline: none;
 }
 
-/* Для элементов ввода (если будут добавлены в будущем) */
 input:focus,
 textarea:focus,
 select:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px var(--color-border);
 }
